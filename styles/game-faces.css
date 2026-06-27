@@ -1,0 +1,204 @@
+/* individual portrait containers */
+.gf-container {
+	padding-left: 8px;
+	padding-right: 8px;
+	pointer-events: auto;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.gf-img {
+	width: 128px;
+	height: 128px;
+	object-fit: cover;
+	cursor: pointer;
+	transition: transform 0.1s ease;
+}
+
+.gf-label {
+	margin-top: 8px;
+	font-size: 16px;
+	font-weight: bold;
+	color: #e0def4;
+	text-align: center;
+	text-shadow:
+		0 0 2px black,
+		0 0 4px black;
+	pointer-events: none;
+	user-select: none;
+
+	max-width: 128px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* full bar, squares in a row */
+#gf-bar {
+	position: fixed;
+	display: flex;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 100%;
+	align-items: center;
+	padding: 15px;
+	justify-content: center;
+	z-index: 80;
+	pointer-events: none;
+}
+
+/* Context dialog overlay (modal-like) */
+
+/* Dark mode palette (flat) */
+/*
+	Rose Pine (mapped):
+	#fbf5ef - lightest
+	#f2d3ab - pale yellow
+	#c69fa5 - pastel desat orange
+	#8b6d9c - light purple
+	#494d7e - mid-dark blue/purple
+	#27274  - darkest
+*/
+
+.gf-context-overlay,
+#gf-context-overlay {
+	position: fixed;
+	inset: 0;
+	/* background: rgba(38, 35, 58, 0.75); */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 10000;
+	-webkit-font-smoothing: antialiased;
+}
+
+.gf-dialog {
+	background: #191724;
+	color: #e0def4;
+	min-width: 360px;
+	border-radius: 8px;
+	overflow: hidden;
+	font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+		Arial;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+	border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.gf-dialog-header {
+	padding: 12px 16px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.gf-dialog-header h3 {
+	margin: 0;
+	font-size: 15px;
+	color: #fbf5ef;
+}
+
+.gf-dialog-body {
+	padding: 14px 16px;
+	font-size: 14px;
+	color: #fbf5ef;
+}
+
+.gf-dialog-body small {
+	color: #f2d3ab;
+}
+
+.gf-dialog-footer {
+	padding: 10px 12px;
+	display: flex;
+	gap: 10px;
+	justify-content: flex-end;
+	border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.gf-btn {
+	padding: 7px 12px;
+	border-radius: 6px;
+	border: 1px solid rgba(255, 255, 255, 0.04);
+	background: #26233a;
+	color: #fbf5ef;
+	cursor: pointer;
+	font-size: 13px;
+}
+
+.gf-btn:hover {
+	background: #26233a;
+}
+
+.gf-btn:active {
+	transform: translateY(1px);
+}
+
+.gf-btn-primary {
+	background: #1f1d2e;
+	color: #fbf5ef;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.gf-dialog .gf-dialog-body p {
+	margin: 0 0 8px 0;
+}
+
+.gf-dialog .gf-dialog-body img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+/* Portrait config styling */
+.portrait-grid {
+	display: flex;
+	flex-direction: row;
+	gap: 16px;
+	overflow-x: auto;
+	padding: 16px 16px;
+}
+
+.portrait-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	min-width: 128px;
+}
+
+.portrait-img {
+	width: 128px;
+	height: 128px;
+	object-fit: cover;
+	border-radius: 4px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.portrait-label {
+	font-size: 15px;
+	font-weight: bold;
+	color: #e0def4;
+	text-align: center;
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.portrait-btn:hover {
+	background: #26233a;
+}
+
+.portrait-btn:active {
+	transform: translateY(1px);
+}
+
+.portrait-btn-primary {
+	background: #1f1d2e;
+	color: #fbf5ef;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.form-group {
+	max-width: 500px;
+}
