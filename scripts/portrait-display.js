@@ -33,9 +33,24 @@ class PortraitDisplay {
 		img.alt = actor.name;
 		img.classList.add("gf-img");
 		img.dataset.actorId = actor.id;
+		this.applyExpressionShadow(img, data, data.activeIndex);
 
 		return img;
 	}
+
+    applyExpressionShadow(img, data, index) {
+    	const enabled = !!data.shadowEnabled?.[index];
+    	const color = data.shadowColors?.[index] ?? "#000000";
+    
+    	if (enabled) {
+    		img.style.boxShadow = `
+    			0 0 0 3px ${color},
+    			0 0 12px 4px ${color}
+    		`;
+    	} else {
+    		img.style.boxShadow = "none";
+    	}
+    }
 
     createPortraitLabel(actor) {
         const label = document.createElement("div");
@@ -68,6 +83,7 @@ class PortraitDisplay {
 					callback: () => {
 						GameFacesData.setActivePortrait(actorId, index);
 						img.src = data.portraits[index];
+						this.applyExpressionShadow(img, data, index);
 					},
 				}));
 
@@ -119,6 +135,8 @@ class PortraitDisplay {
 								portraits: portraitData.portraits,
 								labels: portraitData.labels,
 								activeIndex: portraitData.activeIndex,
+								shadowEnabled: portraitData.shadowEnabled,
+								shadowColors: portraitData.shadowColors,
 							}
 						);
 					overlay.innerHTML = html;
@@ -136,6 +154,47 @@ class PortraitDisplay {
 
 				const setupDialogListeners = () => {
 					const dialog = overlay.querySelector(".gf-dialog");
+
+					dialog.addEventListener("change", async (e) => {
+                    	const shadowToggle = e.target.closest('input[data-action="shadow-toggle"]');
+                    	const shadowColor = e.target.closest('input[data-action="shadow-color"]');
+                    
+                    	if (!shadowToggle && !shadowColor) return;
+                    
+                    	const portraitItem = e.target.closest(".portrait-item");
+                    	if (!portraitItem) return;
+                    
+                    	const index = Array.from(portraitItem.parentNode.children).indexOf(portraitItem);
+                    
+                    	const updatedData = {
+                    		...portraitData,
+                    		shadowEnabled: [...(portraitData.shadowEnabled ?? [])],
+                    		shadowColors: [...(portraitData.shadowColors ?? [])],
+                    	};
+                    
+                    	if (shadowToggle) {
+                    		updatedData.shadowEnabled[index] = shadowToggle.checked;
+                    	}
+                    
+                    	if (shadowColor) {
+                    		const value = shadowColor.value.trim();
+                    
+                    		if (!/^#[0-9a-fA-F]{6}$/.test(value)) {
+                    			ui.notifications.warn("Shadow color must be a hex code like #ff0000.");
+                    			shadowColor.value = updatedData.shadowColors[index] ?? "#000000";
+                    			return;
+                    		}
+                    
+                    		updatedData.shadowColors[index] = value;
+                    	}
+                    
+                    	await GameFacesData.updatePortraits(actorId, updatedData);
+                    	portraitData = GameFacesData.getPortraitsForActor(actorId);
+                    
+                    	await renderDialog();
+                    	this.render();
+                    	updatePortraitStyles();
+                    });
 
 					dialog.addEventListener("click", async (e) => {
 						e.stopPropagation();
@@ -330,9 +389,18 @@ class PortraitDisplay {
 
 								if (!confirmDelete) return;
 
-								const updatedData = { ...portraitData };
-								updatedData.portraits.splice(index, 1);
-								updatedData.labels.splice(index, 1);
+								const updatedData = {
+                                	...portraitData,
+                                	portraits: [...portraitData.portraits],
+                                	labels: [...portraitData.labels],
+                                	shadowEnabled: [...(portraitData.shadowEnabled ?? [])],
+                                	shadowColors: [...(portraitData.shadowColors ?? [])],
+                                };
+                                
+                                updatedData.portraits.splice(index, 1);
+                                updatedData.labels.splice(index, 1);
+                                updatedData.shadowEnabled.splice(index, 1);
+                                updatedData.shadowColors.splice(index, 1);
 
 								if (
 									updatedData.activeIndex >=

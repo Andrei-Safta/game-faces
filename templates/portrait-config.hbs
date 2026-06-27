@@ -6,8 +6,36 @@
         <div class="portrait-grid">
             {{#each portraits as |path index|}}
                 <div class="portrait-item">
-                    <img src="{{path}}" alt="{{lookup ../labels index}}" class="portrait-img">
+                    <img
+                    	src="{{path}}"
+                    	alt="{{lookup ../labels index}}"
+                    	class="portrait-img"
+                    	{{#if (lookup ../shadowEnabled index)}}
+                    	style="box-shadow: 0 0 0 3px {{lookup ../shadowColors index}}, 0 0 12px 4px {{lookup ../shadowColors index}};"
+                    	{{/if}}
+                    >
+                    
                     <label class="portrait-label">{{lookup ../labels index}}</label>
+                    
+                    <div class="portrait-shadow-controls">
+                    	<label class="portrait-shadow-toggle">
+                    		<input
+                    			type="checkbox"
+                    			data-action="shadow-toggle"
+                    			{{#if (lookup ../shadowEnabled index)}}checked{{/if}}
+                    		>
+                    		Shadow
+                    	</label>
+                    
+                    	<input
+                    		class="portrait-shadow-color"
+                    		type="text"
+                    		data-action="shadow-color"
+                    		value="{{lookup ../shadowColors index}}"
+                    		placeholder="#ff0000"
+                    		pattern="^#[0-9a-fA-F]{6}$"
+                    	>
+                    </div>
                     <button class="portrait-btn" data-action="config">Change label for {{lookup ../labels index}}</button>
                     <button class="portrait-btn" data-action="remove">Remove {{lookup ../labels index}}</button>
 		            <button class="portrait-btn" data-action="browse">Change Portrait</button>
