@@ -269,16 +269,25 @@ Hooks.on("ready", function () {
 
 	window.addEventListener("resize", () => {
 		updatePortraitStyles();
+		window.PortraitDisplay?.updateLabelSpacing?.();
 	});
 
 	Hooks.on("renderHotbar", () => {
 		updatePortraitStyles();
 	});
 
-	Hooks.on("updateActor", (actor, changes, options, userId) => {
-        if (changes.flags?.[GameFaces.ID]?.[GameFaces.FLAGS.PORTRAITS]) {
-            window.PortraitDisplay?.render();
-	}});
+    Hooks.on("updateActor", (actor, changes, options, userId) => {
+    	const portraitsChanged = foundry.utils.hasProperty(
+    		changes,
+    		`flags.${GameFaces.ID}.${GameFaces.FLAGS.PORTRAITS}`
+    	);
+    
+    	const nameChanged = foundry.utils.hasProperty(changes, "name");
+    
+    	if (portraitsChanged || nameChanged) {
+    		window.PortraitDisplay?.render();
+    	}
+    });
 	initWod5eFrenzyIntegration();
 });
 

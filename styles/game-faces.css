@@ -7,6 +7,10 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+
+	width: var(--gf-container-width, 128px);
+	flex: 0 0 var(--gf-container-width, 128px);
+	box-sizing: content-box;
 }
 
 .gf-container.gf-speaking .gf-img {
@@ -46,9 +50,11 @@
 	pointer-events: none;
 	user-select: none;
 
-	max-width: 128px;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	display: inline-block;
+	width: max-content;
+	max-width: none;
+	overflow: visible;
+	text-overflow: clip;
 	white-space: nowrap;
 }
 

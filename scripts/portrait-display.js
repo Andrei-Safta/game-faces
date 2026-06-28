@@ -33,12 +33,12 @@ class PortraitDisplay {
 		img.alt = actor.name;
 		img.classList.add("gf-img");
 		img.dataset.actorId = actor.id;
-		this.applyExpressionShadow(img, data, data.activeIndex);
+//		this.applyExpressionShadow(img, data, data.activeIndex);
 
 		return img;
 	}
 
-    applyExpressionShadow(img, data, index) {
+    applyExpressionShadow(img, label, data, index) {
     	const enabled = !!data.shadowEnabled?.[index];
     	const color = data.shadowColors?.[index] ?? "#000000";
     
@@ -47,8 +47,24 @@ class PortraitDisplay {
     			0 0 0 3px ${color},
     			0 0 12px 4px ${color}
     		`;
+    
+    		if (label) {
+    			label.style.color = "#ffffff";
+    			label.style.textShadow = `
+    				0 0 2px ${color},
+    				0 0 4px ${color},
+    				0 0 6px ${color},
+    				0 0 10px ${color},
+    				0 0 14px ${color}
+    			`;
+    		}
     	} else {
     		img.style.boxShadow = "none";
+    
+    		if (label) {
+    			label.style.color = "";
+    			label.style.textShadow = "";
+    		}
     	}
     }
 
@@ -113,11 +129,20 @@ class PortraitDisplay {
 					action: `emotion${index}`,
 					label,
 					default: index === data.activeIndex,
-					callback: () => {
-						GameFacesData.setActivePortrait(actorId, index);
-						img.src = data.portraits[index];
-						this.applyExpressionShadow(img, data, index);
-					},
+                    callback: () => {
+                    	GameFacesData.setActivePortrait(actorId, index);
+                    	img.src = data.portraits[index];
+                    
+                    	const container = img.closest(".gf-container");
+                    	const label = container?.querySelector(".gf-label");
+                    
+                    	this.applyExpressionShadow(
+                    		img,
+                    		label,
+                    		data,
+                    		index
+                    	);
+                    },
 				}));
 
 				foundry.applications.api.DialogV2.wait({
@@ -509,6 +534,43 @@ class PortraitDisplay {
     	});
     }
 
+    updateLabelSpacing() {
+    	if (!this.bar) return;
+    
+    	requestAnimationFrame(() => {
+    		const containers = Array.from(
+    			this.bar.querySelectorAll(".gf-container")
+    		);
+    
+    		if (!containers.length) return;
+    
+    		let maxWidth = 0;
+    
+    		for (const container of containers) {
+    			const img = container.querySelector(".gf-img");
+    			const label = container.querySelector(".gf-label");
+    
+    			const imageWidth = img
+    				? img.getBoundingClientRect().width
+    				: 0;
+    
+    			const labelWidth = label
+    				? label.getBoundingClientRect().width
+    				: 0;
+    
+    			maxWidth = Math.max(maxWidth, imageWidth, labelWidth);
+    		}
+    
+    		// Small buffer for glow/text-shadow and symbol spacing.
+    		maxWidth = Math.ceil(maxWidth);
+    
+    		this.bar.style.setProperty(
+    			"--gf-container-width",
+    			`${maxWidth}px`
+    		);
+    	});
+    }
+
 	render() {
 		if (!this.bar) {
 			console.error("Game Faces | Bar not created yet!");
@@ -523,22 +585,31 @@ class PortraitDisplay {
 		});
 
         actorsWithPortraits.forEach((actor) => {
-            const container = this.createContainer(actor.id);
-            const img = this.createPortraitImage(actor);
-            const label = this.createPortraitLabel(actor);
+        	const container = this.createContainer(actor.id);
+        	const img = this.createPortraitImage(actor);
+        	const label = this.createPortraitLabel(actor);
+        	const data = GameFacesData.getPortraitsForActor(actor.id);
         
-            if (img) {
-                container.appendChild(img);
-                container.appendChild(label);
-            }
+        	if (img) {
+        		container.appendChild(img);
+        		container.appendChild(label);
         
-            this.bar.appendChild(container);
+        		this.applyExpressionShadow(
+        			img,
+        			label,
+        			data,
+        			data.activeIndex
+        		);
+        	}
+        
+        	this.bar.appendChild(container);
         });
 
 		this.setupContextMenus();
 		this.setupLabelClicks();
 
 		updatePortraitStyles();
+		this.updateLabelSpacing();
 		window.GameFacesListenerBridge?.refreshSpeakingHighlights?.();
 	}
 }
