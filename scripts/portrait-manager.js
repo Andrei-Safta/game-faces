@@ -24,7 +24,12 @@ class GameFacesData {
 		const shadowColors = Array.isArray(data?.shadowColors)
 			? data.shadowColors
 			: [];
-
+		
+		const discordUserId =
+        	typeof data?.discordUserId === "string"
+        		? data.discordUserId.trim()
+        		: "";
+        
 		let activeIndex = Number.isInteger(data?.activeIndex)
 			? data.activeIndex
 			: 0;
@@ -44,6 +49,7 @@ class GameFacesData {
 				const color = shadowColors[index];
 				return this.isValidHexColor(color) ? color.trim() : "#000000";
 			}),
+			discordUserId,
 		};
 	}
 

@@ -144,6 +144,7 @@ class PortraitDisplay {
 								activeIndex: portraitData.activeIndex,
 								shadowEnabled: portraitData.shadowEnabled,
 								shadowColors: portraitData.shadowColors,
+								discordUserId: portraitData.discordUserId ?? "",
 							}
 						);
 					overlay.innerHTML = html;
@@ -162,16 +163,12 @@ class PortraitDisplay {
 				const setupDialogListeners = () => {
 					const dialog = overlay.querySelector(".gf-dialog");
 
-					dialog.addEventListener("change", async (e) => {
+                    dialog.addEventListener("change", async (e) => {
+                    	const discordIdInput = e.target.closest('input[data-action="discord-user-id"]');
                     	const shadowToggle = e.target.closest('input[data-action="shadow-toggle"]');
                     	const shadowColor = e.target.closest('input[data-action="shadow-color"]');
                     
-                    	if (!shadowToggle && !shadowColor) return;
-                    
-                    	const portraitItem = e.target.closest(".portrait-item");
-                    	if (!portraitItem) return;
-                    
-                    	const index = Array.from(portraitItem.parentNode.children).indexOf(portraitItem);
+                    	if (!discordIdInput && !shadowToggle && !shadowColor) return;
                     
                     	const updatedData = {
                     		...portraitData,
@@ -179,28 +176,45 @@ class PortraitDisplay {
                     		shadowColors: [...(portraitData.shadowColors ?? [])],
                     	};
                     
-                    	if (shadowToggle) {
-                    		updatedData.shadowEnabled[index] = shadowToggle.checked;
+                    	if (discordIdInput) {
+                    		updatedData.discordUserId = discordIdInput.value.trim();
                     	}
                     
-                    	if (shadowColor) {
-                    		const value = shadowColor.value.trim();
+                    	if (shadowToggle || shadowColor) {
+                    		const portraitItem = e.target.closest(".portrait-item");
+                    		if (!portraitItem) return;
                     
-                    		if (!/^#[0-9a-fA-F]{6}$/.test(value)) {
-                    			ui.notifications.warn("Shadow color must be a hex code like #ff0000.");
-                    			shadowColor.value = updatedData.shadowColors[index] ?? "#000000";
-                    			return;
+                    		const index = Array.from(
+                    			portraitItem.parentNode.children
+                    		).indexOf(portraitItem);
+                    
+                    		if (shadowToggle) {
+                    			updatedData.shadowEnabled[index] = shadowToggle.checked;
                     		}
                     
-                    		updatedData.shadowColors[index] = value;
+                    		if (shadowColor) {
+                    			const value = shadowColor.value.trim();
+                    
+                    			if (!/^#[0-9a-fA-F]{6}$/.test(value)) {
+                    				ui.notifications.warn("Shadow color must be a hex code like #ff0000.");
+                    				shadowColor.value = updatedData.shadowColors[index] ?? "#000000";
+                    				return;
+                    			}
+                    
+                    			updatedData.shadowColors[index] = value;
+                    		}
                     	}
                     
                     	await GameFacesData.updatePortraits(actorId, updatedData);
                     	portraitData = GameFacesData.getPortraitsForActor(actorId);
                     
-                    	await renderDialog();
-                    	this.render();
-                    	updatePortraitStyles();
+                    	// Only rerender the full portrait UI when shadow controls changed.
+                    	// The Discord ID field does not need a rerender.
+                    	if (shadowToggle || shadowColor) {
+                    		await renderDialog();
+                    		this.render();
+                    		updatePortraitStyles();
+                    	}
                     });
 
 					dialog.addEventListener("click", async (e) => {
@@ -499,6 +513,7 @@ class PortraitDisplay {
 		this.setupLabelClicks();
 
 		updatePortraitStyles();
+		window.GameFacesListenerBridge?.refreshSpeakingHighlights?.();
 	}
 }
 

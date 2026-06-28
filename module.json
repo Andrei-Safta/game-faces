@@ -10,6 +10,7 @@
   "flags": {
     "canUpload": true
   },
+  "socket": true,
   "esmodules": [
     "scripts/game-faces.js",
     "scripts/portrait-manager.js",

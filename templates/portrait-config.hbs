@@ -3,7 +3,20 @@
         <h3>{{title}}</h3>
         </header>
 	<body class="gf-dialog-body">
-        <div class="portrait-grid">
+        
+        <div class="gf-discord-id-group">
+        	<label for="gf-discord-user-id">Discord User ID</label>
+        	<input
+        		id="gf-discord-user-id"
+        		type="text"
+        		data-action="discord-user-id"
+        		value="{{discordUserId}}"
+        		placeholder="Enter ID Here"
+        	>
+        	<small>Used by The Listener to highlight this portrait when the Discord user is speaking.</small>
+        </div>
+		
+		<div class="portrait-grid">
             {{#each portraits as |path index|}}
                 <div class="portrait-item">
                     <img

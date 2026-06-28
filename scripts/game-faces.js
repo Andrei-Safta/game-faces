@@ -1,5 +1,6 @@
 import { GameFacesData } from "./portrait-manager.js";
 import { PortraitDisplay } from "./portrait-display.js";
+import { initListenerBridge } from "./listener-bridge.js";
 
 console.log("Game Faces | Hello wodlr");
 
@@ -198,6 +199,42 @@ Hooks.on("init", function () {
 		config: true,
 		onChange: () => updatePortraitStyles(),
 	});
+    
+    game.settings.register(GameFaces.ID, GameFaces.SETTINGS.LISTENER_ENABLED, {
+    	name: "Enable The Listener Bridge",
+    	hint: "GM client only. Connects this browser to The Listener Discord bot bridge.",
+    	default: false,
+    	type: Boolean,
+    	scope: "client",
+    	config: true,
+    	onChange: () => {
+    		window.GameFacesListenerBridge?.reconnect?.();
+    	},
+    });
+    
+    game.settings.register(GameFaces.ID, GameFaces.SETTINGS.LISTENER_URL, {
+    	name: "The Listener Bridge URL",
+    	hint: "The local WebSocket URL for The Listener. Usually ws://localhost:3001",
+    	default: "ws://localhost:3001",
+    	type: String,
+    	scope: "client",
+    	config: true,
+    	onChange: () => {
+    		window.GameFacesListenerBridge?.reconnect?.();
+    	},
+    });
+    
+    game.settings.register(GameFaces.ID, GameFaces.SETTINGS.LISTENER_TOKEN, {
+    	name: "The Listener Bridge Token",
+    	hint: "Must match BRIDGE_SECRET in The Listener bot .env file. Leave blank if the bot has no bridge secret.",
+    	default: "",
+    	type: String,
+    	scope: "client",
+    	config: true,
+    	onChange: () => {
+    		window.GameFacesListenerBridge?.reconnect?.();
+    	},
+	});
 
 	game.settings.registerMenu(GameFaces.ID, GameFaces.SETTINGS.ADD_PORTRAIT, {
 		name: game.i18n.localize("GAMEFACES.Settings.AddPortraitMenu.Name"),
@@ -206,6 +243,7 @@ Hooks.on("init", function () {
 		icon: "fas fa-image",
 		type: AddPortraitMenu,
 		restricted: false,
+	
 	});
 });
 
@@ -224,6 +262,8 @@ Hooks.on("ready", function () {
 	window.GameFaces = GameFaces;
 	window.GameFacesData = GameFacesData;
 	window.PortraitDisplay = display;
+
+	initListenerBridge();
 
 	window.addEventListener("resize", () => {
 		updatePortraitStyles();
@@ -254,7 +294,10 @@ class GameFaces {
 		DROP_SHADOW: "drop-shadow",
 		BORDER_RADIUS: "border-radius",
 		ADD_PORTRAIT: "add-portrait",
-		PORTRAIT_GAP: "portrait-gap"
+		PORTRAIT_GAP: "portrait-gap",
+	    LISTENER_ENABLED: "listener-enabled",
+	    LISTENER_URL: "listener-url",
+	    LISTENER_TOKEN: "listener-token",
 	};
 }
 

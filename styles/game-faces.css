@@ -9,6 +9,12 @@
 	align-items: center;
 }
 
+.gf-container.gf-speaking .gf-img {
+	box-shadow:
+		0 0 0 3px #23a55a,
+		0 0 12px 4px #23a55a !important;
+}
+
 .gf-img {
 	width: 128px;
 	height: 128px;
@@ -159,6 +165,36 @@
 	display: block;
 }
 
+.gf-discord-id-group {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 12px 16px 0 16px;
+	color: #e0def4;
+}
+
+.gf-discord-id-group label {
+	font-size: 13px;
+	font-weight: bold;
+	color: #fbf5ef;
+}
+
+.gf-discord-id-group input {
+	width: 100%;
+	max-width: 320px;
+	padding: 5px 7px;
+	border-radius: 4px;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	background: #26233a;
+	color: #fbf5ef;
+	font-size: 13px;
+}
+
+.gf-discord-id-group small {
+	color: #f2d3ab;
+	font-size: 11px;
+}
+
 /* Portrait config styling */
 .portrait-grid {
 	display: flex;
@@ -240,3 +276,4 @@
 .form-group {
 	max-width: 500px;
 }
+
