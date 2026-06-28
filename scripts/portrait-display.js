@@ -52,11 +52,37 @@ class PortraitDisplay {
     	}
     }
 
+    getWod5eActorSymbol(actor) {
+    	const symbols = {
+    		vampire: "a",
+    		hunter: "f",
+    		werewolf: "h",
+    	};
+    
+    	return symbols[actor.type] ?? "";
+    }
+
     createPortraitLabel(actor) {
     	const label = document.createElement("div");
     	label.classList.add("gf-label");
-    	label.textContent = actor.name;
     	label.dataset.actorId = actor.id;
+    
+    	const symbolChar = this.getWod5eActorSymbol(actor);
+    
+    	if (symbolChar) {
+    		const symbol = document.createElement("span");
+    		symbol.classList.add("gf-label-symbol");
+    		symbol.textContent = symbolChar;
+    
+    		label.appendChild(symbol);
+    		label.append(" ");
+    	}
+    
+    	const name = document.createElement("span");
+    	name.classList.add("gf-label-name");
+    	name.textContent = actor.name;
+    
+    	label.appendChild(name);
     
     	if (game.user.isGM || actor.isOwner) {
     		label.classList.add("gf-label-clickable");

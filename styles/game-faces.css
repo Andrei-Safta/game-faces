@@ -52,6 +52,13 @@
 	white-space: nowrap;
 }
 
+.gf-label-symbol {
+	font-family: "wod5eSymbols";
+	font-weight: normal;
+	font-size: 1.1em;
+	vertical-align: baseline;
+}
+
 .gf-label.gf-label-clickable {
 	pointer-events: auto;
 	cursor: pointer;
