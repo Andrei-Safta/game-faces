@@ -1,6 +1,7 @@
 import { GameFacesData } from "./portrait-manager.js";
 import { PortraitDisplay } from "./portrait-display.js";
 import { initListenerBridge } from "./listener-bridge.js";
+import { initWod5eFrenzyIntegration } from "./wod5e-frenzy-integration.js";
 
 console.log("Game Faces | Hello wodlr");
 
@@ -264,6 +265,7 @@ Hooks.on("ready", function () {
 	window.PortraitDisplay = display;
 
 	initListenerBridge();
+	initWod5eFrenzyIntegration();
 
 	window.addEventListener("resize", () => {
 		updatePortraitStyles();
@@ -277,6 +279,7 @@ Hooks.on("ready", function () {
         if (changes.flags?.[GameFaces.ID]?.[GameFaces.FLAGS.PORTRAITS]) {
             window.PortraitDisplay?.render();
 	}});
+	initWod5eFrenzyIntegration();
 });
 
 

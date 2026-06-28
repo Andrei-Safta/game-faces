@@ -34,8 +34,9 @@
 }
 
 .gf-label {
-	margin-top: 8px;
-	font-size: 16px;
+	margin-top: 4px;
+	font-family: "vampireRevised", serif;
+	font-size: 14px;
 	font-weight: bold;
 	color: #e0def4;
 	text-align: center;
