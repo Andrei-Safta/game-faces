@@ -15,6 +15,16 @@
 		0 0 12px 4px #23a55a !important;
 }
 
+.gf-container.gf-speaking .gf-label {
+	color: #ffffff;
+	text-shadow:
+		0 0 2px #23a55a,
+		0 0 4px #23a55a,
+		0 0 6px #23a55a,
+		0 0 10px #23a55a,
+		0 0 14px #23a55a !important;
+}
+
 .gf-img {
 	width: 128px;
 	height: 128px;
