@@ -35,6 +35,16 @@
 	white-space: nowrap;
 }
 
+.gf-label.gf-label-clickable {
+	pointer-events: auto;
+	cursor: pointer;
+}
+
+.gf-label.gf-label-clickable:hover {
+	text-decoration: underline;
+	filter: brightness(1.2);
+}
+
 /* full bar, squares in a row */
 #gf-bar {
 	position: fixed;

@@ -53,10 +53,17 @@ class PortraitDisplay {
     }
 
     createPortraitLabel(actor) {
-        const label = document.createElement("div");
-        label.classList.add("gf-label");
-        label.textContent = actor.name;
-        return label;
+    	const label = document.createElement("div");
+    	label.classList.add("gf-label");
+    	label.textContent = actor.name;
+    	label.dataset.actorId = actor.id;
+    
+    	if (game.user.isGM || actor.isOwner) {
+    		label.classList.add("gf-label-clickable");
+    		label.title = `Open ${actor.name} Char Sheet`;
+    	}
+    
+    	return label;
     }
 
 	setupContextMenus() {
@@ -436,6 +443,32 @@ class PortraitDisplay {
 		});
 	}
 
+    setupLabelClicks() {
+    	const labels = this.bar.querySelectorAll(".gf-label-clickable");
+    
+    	labels.forEach((label) => {
+    		label.addEventListener("click", (event) => {
+    			event.preventDefault();
+    			event.stopPropagation();
+    
+    			const actorId = label.dataset.actorId;
+    			const actor = game.actors.get(actorId);
+    
+    			if (!actor) {
+    				ui.notifications.warn("Actor not found.");
+    				return;
+    			}
+    
+    			if (!game.user.isGM && !actor.isOwner) {
+    				ui.notifications.warn("You do not have permission to open this actor sheet.");
+    				return;
+    			}
+    
+    			actor.sheet.render(true, { focus: true });
+    		});
+    	});
+    }
+
 	render() {
 		if (!this.bar) {
 			console.error("Game Faces | Bar not created yet!");
@@ -463,6 +496,7 @@ class PortraitDisplay {
         });
 
 		this.setupContextMenus();
+		this.setupLabelClicks();
 
 		updatePortraitStyles();
 	}
