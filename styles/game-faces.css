@@ -1,7 +1,7 @@
 /* individual portrait containers */
 .gf-container {
-	padding-left: 8px;
-	padding-right: 8px;
+	padding-left: 2px;
+	padding-right: 2px;
 	pointer-events: auto;
 
 	display: flex;
@@ -40,7 +40,7 @@
 .gf-label {
 	margin-top: 4px;
 	font-family: "vampireRevised", serif;
-	font-size: 14px;
+	font-size: 16px;
 	font-weight: bold;
 	color: #e0def4;
 	text-align: center;
@@ -61,7 +61,7 @@
 .gf-label-symbol {
 	font-family: "wod5eSymbols";
 	font-weight: normal;
-	font-size: 1.1em;
+	font-size: 1em;
 	vertical-align: baseline;
 }
 
@@ -301,3 +301,22 @@
 	max-width: 500px;
 }
 
+/* Compatibility patch: WoD5E actor sheet sidebar tabs + Lock View/Lock Screen */
+.wod5e.actor.sheet nav.sheet-tabs.tabs {
+	align-items: center !important;
+	overflow-x: hidden !important;
+}
+
+.wod5e.actor.sheet nav.sheet-tabs.tabs > [data-tab] {
+	align-self: center !important;
+}
+
+.game-faces-elevated-hotbar {
+  position: fixed !important;
+  bottom: 8px !important;
+  left: 50% !important;
+  right: auto !important;
+  top: auto !important;
+  transform: translateX(-50%) !important;
+  z-index: 2147483647 !important;
+}

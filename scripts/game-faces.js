@@ -259,6 +259,9 @@ Hooks.on("ready", function () {
 	updatePortraitStyles();
 
 	display.render();
+	document.fonts?.ready?.then(() => {
+		window.PortraitDisplay?.updateLabelSpacing?.();
+	});
 
 	window.GameFaces = GameFaces;
 	window.GameFacesData = GameFacesData;
@@ -361,6 +364,17 @@ function updatePortraitStyles() {
 		}
 	`;
 }
+
+function elevateCoreHotbar() {
+  const hotbar = ui.hotbar?.element;
+  if (!hotbar) return;
+
+  document.body.appendChild(hotbar);
+  hotbar.classList.add("game-faces-elevated-hotbar");
+}
+
+Hooks.once("ready", elevateCoreHotbar);
+Hooks.on("renderHotbar", elevateCoreHotbar);
 
 export { GameFaces, updatePortraitStyles };
 
